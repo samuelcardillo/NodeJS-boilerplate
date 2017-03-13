@@ -3,7 +3,7 @@ var exports     = module.exports = {};
 // Initialize the routing
 exports.initializeRouting = function(app, callback) {
   try {
-    app.use('/api/auth'     , require('./routes/auth'));
+    app.use('/api/auth'     , require('../routes/auth'));
 
     return callback("[I] Routes initialized with success");
   } catch(e) {
@@ -12,7 +12,5 @@ exports.initializeRouting = function(app, callback) {
   
 }
 
-
-
 // the book of connections 
-    // davar = word & meaning 
+// davar = word & meaning 

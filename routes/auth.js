@@ -1,13 +1,14 @@
 var router    = require('express').Router()
   , jwt       = require('jsonwebtoken')
   , r         = require('rethinkdb')
-  , crypto    = require('crypto')
 
 /*****************************
       EXPORTS
 *****************************/
 
 router.post('/signup', function(req, res){
+  if((req.body.password && req.body.email) === undefined) return res.status(403).send({message: 'Fields missing'});
+
   onConnect(function(err, conn) {
     r.db(host.database).table('users').insert({
       email:    req.body.email,
@@ -77,18 +78,5 @@ router.get('/logout', isTokenValid, function(req,res){
 /*****************************
       FUNCTIONS
 *****************************/
-function onConnect(callback) {
-  r.connect({host: host.address, port: 28015 }, function(err, connection) {
-    if(err) throw err;
-    callback(err, connection);
-  });
-}
-
-// Hash the password using SHA1 algorithm /w a salt 🔐
-function hashPassword(password) {
-  var salt = process.env.specialSalt || "SuperSecretKey"
-
-  return crypto.createHmac("sha1", salt).update(password).digest('hex');
-}
 
 module.exports = router;

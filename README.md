@@ -25,6 +25,4 @@ In this version, this is how to use it:
 - `npm install` it
 - `rethinkdb` it
 - Change the database name in `core/database.js`
-- `node boilerplate.js` it 
-
-The next main version will be more like a tool with parameters. 
+- `node boilerplate.js` it (*you can also `node boilerplate.js -p [port]` it to change the port it listen too, default is 5446*)

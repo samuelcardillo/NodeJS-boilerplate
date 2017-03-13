@@ -1,8 +1,13 @@
-// Including and starting dependencies
+// Initializing dependencies
 var express       = require("express")
   , app           = express()
   , bodyParser    = require('body-parser')
-  , server        = require('http').createServer(app).listen(5446)
+  , program       = require('commander')
+                      .version('0.0.1')
+                      .option('-p, --port [value]', 'port')
+                      .parse(process.argv)
+  , serverPort    = program.port || 5446
+  , server        = require('http').createServer(app).listen(serverPort)
 
 /*****************************
       INITIALIZATION
@@ -22,7 +27,7 @@ console.log("######################################");
 console.log("# NodeJS Boilerplate");
 console.log("# By @cyberwarfighte1 (Samuel LESPES CARDILLO)");
 console.log("######################################");
-console.log("[I] Express server started on port 5446 ...");
+console.log("[I] Express server started on port " + serverPort + " ...");
 
 // ======================= START EXPRESS.JS ============================ //
 require('./core/database')

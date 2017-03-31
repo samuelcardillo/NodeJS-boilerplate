@@ -1,6 +1,6 @@
 # Nodejs Backend Boilerplate
 
-This NodeJS boilerplate is my starting point on any of the web projects I am working on. I decided to open-source it and update it as it goes. 
+This NodeJS boilerplate is my starting point for almost all the web projects I am working on. I decided to open-source it and update it as it goes. 
 
 It requires NodeJS (obviously) and RethinkDB as it is mainly what I use as database technology for my projects.
 
@@ -13,15 +13,16 @@ It requires NodeJS (obviously) and RethinkDB as it is mainly what I use as datab
 
 ### With what it will come next
 
-- The token system (which is multi-layered, by the way) is actually working "locally" which means that everytime the server restart, the tokens list is reinitialized. It is something I have fixed multiple times and I will apply the same fix here: tokens managed by the database (*not Redis*).
+- The token system (which is multi-layered, by the way) is actually working "locally" which means that everytime the server restart, the token list is reinitialized. It is something I have fixed multiple times and I will apply the same fix here: tokens managed by the database (*not Redis*).
 
-- Make all the `core/*` files cleaner. 
+- Clearner `core/*` files.
+
+- A `socket.io` + `rethinkdb` example
 
 Additional ideas will be added with time... 
 
 ### How to use it?
 
-In this version, this is how to use it: 
 - `git clone` it
 - `npm install` it
 - `rethinkdb` it
@@ -29,10 +30,10 @@ In this version, this is how to use it:
 
 ### Use the CLI functionalities
 
-The boilerplate comes with a useful set of arguments that can be used when launching the server.
+The boilerplate comes with a useful set of arguments that can be used when launching the server:
 
 - `node boilerplate.js --port [port]` : change the port it listen too, default is 5446
-- `node boilerplate.js --db [dbName]` : change the database it initiallity connect too, default is "*boilerplate*"
+- `node boilerplate.js --db [dbName]` : change the database it initially connect too, default is "*boilerplate*"
 
 You can also mix them up `node boilerplate.js --port 5446 --db Github`
 

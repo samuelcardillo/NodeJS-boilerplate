@@ -4,6 +4,7 @@
   "description": "My NodeJS back-end ready boilerplate",
   "main": "boilerplate.js",
   "dependencies": {
+    "async": "^2.2.0",
     "body-parser": "^1.17.1",
     "commander": "^2.9.0",
     "crypto": "0.0.3",

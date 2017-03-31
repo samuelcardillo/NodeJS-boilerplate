@@ -1,7 +1,7 @@
 var exports     = module.exports = {};
 
 // Initialize the routing
-exports.initializeRouting = function(app, callback) {
+exports.initialize = function(app, callback) {
   try {
     app.use('/api/auth'     , require('../routes/auth'));
 

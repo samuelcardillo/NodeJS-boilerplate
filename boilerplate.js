@@ -5,9 +5,14 @@ var express       = require("express")
   , program       = require('commander')
                       .version('0.0.1')
                       .option('-p, --port [value]', 'port')
+                      .option('-d, --db [value]',   'dbname')
                       .parse(process.argv)
-  , serverPort    = program.port || 5446
-  , server        = require('http').createServer(app).listen(serverPort)
+  , server        = {
+    port:       program.port    || 5446,
+    database:   program.db      || "boilerplate",
+    instance:   require('http').createServer(app)
+  }
+  server.instance.listen(server.port);
 
 /*****************************
       INITIALIZATION
@@ -27,19 +32,20 @@ console.log("######################################");
 console.log("# NodeJS Boilerplate");
 console.log("# By @cyberwarfighte1 (Samuel LESPES CARDILLO)");
 console.log("######################################");
-console.log("[I] Express server started on port " + serverPort + " ...");
+console.log("[I] Express server started on port " + server.port + " ...");
 
 // ======================= START EXPRESS.JS ============================ //
 
 try {
-  require('./core/database')
+  require('./core/database').initialize(server.database);
   require('./core/security')
-  require('./core/routes').initializeRouting(app, function(callback) {
+  require('./core/routes').initialize(app, function(callback) {
     console.log(callback);
   });
 } catch(err) {
   // If there is a crash, we can do some processing before closing the server.
-  server.close();
+  console.log(err);
+  server["instance"].close();
 }
 
 // the book of connections 

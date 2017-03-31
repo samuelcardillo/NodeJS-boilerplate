@@ -9,11 +9,11 @@ var router    = require('express').Router()
 router.post('/signup', function(req, res){
   if((req.body.password && req.body.email) === undefined) return res.status(403).send({message: 'Fields missing'});
 
+  req.body.password = hashPassword(req.body.password); // We hash the password
+
+  // We send the whole body parameters which allows full customization
   onConnect(function(err, conn) {
-    r.db(host.database).table('users').insert({
-      email:    req.body.email,
-      password: hashPassword(req.body.password)
-    }).run(conn, function(err, result){
+    r.db(database.name).table('users').insert(req.body).run(conn, function(err, result){
       conn.close();
       if(err) return res.status(403).send({message: 'Problem establishing a connection with the database.'});
       res.status(200).send({success: true});
@@ -28,7 +28,7 @@ router.post('/signin', function(req,res){
 
    // Lookup in the database
   onConnect(function(err, conn) {
-    r.db(host.database)
+    r.db(database.name)
     .table('users')
     .filter(
       {

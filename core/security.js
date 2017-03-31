@@ -40,11 +40,11 @@ isTokenValid = function(req, res, next) {
 }
 
 
-// Hash the password using SHA1 algorithm /w a salt 🔐
+// Hash the password using SHA256 algorithm /w a salt 🔐
 hashPassword = function(password) {
   var salt = process.env.specialSalt || "SuperSecretKey"
 
-  return crypto.createHmac("sha1", salt).update(password).digest('hex');
+  return crypto.createHmac("sha256", salt).update(password).digest('hex');
 }
 
 

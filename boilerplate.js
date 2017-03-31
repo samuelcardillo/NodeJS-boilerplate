@@ -30,11 +30,17 @@ console.log("######################################");
 console.log("[I] Express server started on port " + serverPort + " ...");
 
 // ======================= START EXPRESS.JS ============================ //
-require('./core/database')
-require('./core/security')
-require('./core/routes').initializeRouting(app, function(callback) {
-  console.log(callback);
-});
+
+try {
+  require('./core/database')
+  require('./core/security')
+  require('./core/routes').initializeRouting(app, function(callback) {
+    console.log(callback);
+  });
+} catch(err) {
+  // If there is a crash, we can do some processing before closing the server.
+  server.close();
+}
 
 // the book of connections 
 // davar = word & meaning 

@@ -1,15 +1,21 @@
 var router    = require('express').Router()
   , jwt       = require('jsonwebtoken')
   , r         = require('rethinkdb')
+  , security  = require('../core/security')
 
 /*****************************
       EXPORTS
 *****************************/
 
+router.get('/', function(req, res) {
+  console.dir(activeTokens);
+  res.status(200).send("hey");
+})
+
 router.post('/signup', function(req, res){
   if((req.body.password && req.body.email) === undefined) return res.status(403).send({message: 'Fields missing'});
 
-  req.body.password = hashPassword(req.body.password); // We hash the password
+  req.body.password = security.hashPassword(req.body.password); // We hash the password
 
   // We send the whole body parameters which allows full customization
   onConnect(function(err, conn) {
@@ -33,31 +39,20 @@ router.post('/signin', function(req,res){
     .filter(
       {
         email:    req.body.email,
-        password: hashPassword(req.body.password)
+        password: security.hashPassword(req.body.password)
       })
     .without('password')
     .run(conn, function(err, cursor) {
       conn.close(); // We don't need the connection anymore
       if(err) return res.status(403).send({message: 'Problem establishing a connection with the database.'});
 
-      cursor.toArray(function(err, result) {
+      cursor.toArray(function(err, results) {
         if (err) return res.status(403).send({message: 'Problem establishing a connection with the database.'});
-        if(result.length <= 0) return res.status(403).send({message: 'User doesn\'t exist'});
+        if(results.length <= 0) return res.status(403).send({message: 'User doesn\'t exist'});
 
-        if(activeTokens[req.body.username] === undefined) activeTokens[req.body.username] = [];
-        // We generate the token
-        result[0].token = jwt.sign(result[0], tokenPassphrase, { expiresIn: '1d' });
-
-        // We store the token in the active tokens and few info for security
-        activeTokens[req.body.username].push({
-          token         :   result[0].token,
-          userAgent     :   req.headers["user-agent"],
-          ipAddress     :   req.headers["x-forward-for"],
-          createdOn     :   new Date(),
-          lastAccessed  :   new Date()
-        })
-
-        res.status(200).send(result);
+        security.generateToken(req, results[0], function(err, result){
+          res.status(200).send(result);
+        });
       });
     })
   });

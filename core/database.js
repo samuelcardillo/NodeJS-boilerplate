@@ -8,8 +8,8 @@ database = {
   hostname: "localhost"
 }
 
-exports.initialize = function(databaseName) {
-  database.name = databaseName; // We update the global variable with the name the user chosen
+exports.initialize = function(server) {
+  database.name = server.database; // We update the global variable with the name the user chosen
 
   // We define the tables that are required by the boilerplate
   var tables = [
@@ -21,19 +21,20 @@ exports.initialize = function(databaseName) {
   onConnect(function(err, conn) {
     r.dbList().run(conn, function(err, results){
       // If the database exist, we have nothing to do
-      if(results.indexOf(databaseName) != -1) {
+      if(results.indexOf(database.name) != -1) {
         conn.close(); // We close the connection
+        server.security.loadTokens();
         return console.log("[I] Database initialized with success"); // And we abort any additional procedures
       }
 
-      console.log("[O] I have not found " + databaseName + "! 😱  Let me fix that for you...")
+      console.log("[O] I have not found " + database.name + "! 😱  Let me fix that for you...")
       // Else, we create the database and its tables
-      r.dbCreate(databaseName).run(conn, function(err, result){
-        console.log("[I] Database " + databaseName + " was created with success");
+      r.dbCreate(database.name).run(conn, function(err, result){
+        console.log("[I] Database " + database.name + " was created with success");
 
         // We create the tables asynchronously 
         async.each(tables, function(item, callback){
-          r.db(databaseName).tableCreate(item).run(conn, function(err, result){
+          r.db(database.name).tableCreate(item).run(conn, function(err, result){
             console.log("[I] Table " + item + " was created with success");
             return callback();
           });
@@ -41,6 +42,7 @@ exports.initialize = function(databaseName) {
           conn.close(); // We close the connection at the end
           console.log("[I] All good! Everything is ready for you 😘");
           console.log("[I] Database initialized with success");
+          // server.security.loadTokens();
           return; // Yay
         });
 

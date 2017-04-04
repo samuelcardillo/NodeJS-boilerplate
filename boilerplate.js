@@ -10,7 +10,8 @@ var express       = require("express")
   , server        = {
     port:       program.port    || 5446,
     database:   program.db      || "boilerplate",
-    instance:   require('http').createServer(app)
+    instance:   require('http').createServer(app),
+    security:   require('./core/security')
   }
   server.instance.listen(server.port);
 
@@ -37,16 +38,23 @@ console.log("[I] Express server started on port " + server.port + " ...");
 // ======================= START EXPRESS.JS ============================ //
 
 try {
-  require('./core/database').initialize(server.database);
-  require('./core/security')
+  require('./core/database').initialize(server);
   require('./core/routes').initialize(app, function(callback) {
     console.log(callback);
   });
 } catch(err) {
   // If there is a crash, we can do some processing before closing the server.
   console.log(err);
-  server["instance"].close();
+  server.instance.close();
 }
+
+process.on('SIGINT', function() {
+    console.log("Caught interrupt signal");
+    // server.security.saveTokens(function(callback){
+      process.exit();
+    // });
+    
+});
 
 // the book of connections 
 // davar = word & meaning 

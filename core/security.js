@@ -1,6 +1,7 @@
 var crypto  = require('crypto')
   , r       = require('rethinkdb')
   , jwt     = require('jsonwebtoken')
+  , fs      = require('fs')
   , exports = module.exports = {};
 
 activeTokens    = {}; // Allow to have a better control on what are the "active sessions"

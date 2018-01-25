@@ -13,8 +13,7 @@ exports.initialize = function(server) {
 
   // We define the tables that are required by the boilerplate
   var tables = [
-    "users",
-    "users_token"
+    "users"
   ];
 
   // We check if the database exist
@@ -23,7 +22,7 @@ exports.initialize = function(server) {
       // If the database exist, we have nothing to do
       if(results.indexOf(database.name) != -1) {
         conn.close(); // We close the connection
-        server.security.loadTokens();
+        server.security.loadTokens(); // We load the tokens if any exists
         return console.log("[I] Database initialized with success"); // And we abort any additional procedures
       }
 
@@ -42,7 +41,6 @@ exports.initialize = function(server) {
           conn.close(); // We close the connection at the end
           console.log("[I] All good! Everything is ready for you 😘");
           console.log("[I] Database initialized with success");
-          // server.security.loadTokens();
           return; // Yay
         });
 

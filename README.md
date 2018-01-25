@@ -7,15 +7,12 @@ It requires NodeJS (obviously) and RethinkDB as it is mainly what I use as datab
 #### With what it comes
 
 * CLI functionalities
-* JWT management system (generation & verification)
+* JWT management system (generation, verification, persistence)
 * User management system (sign in, sign up, log out)
 * Route layout
 
 ### With what it will come next
-
-- The token system (which is multi-layered, by the way) is actually working "locally" which means that everytime the server restart, the token list is reinitialized. It is something I have fixed multiple times and I will apply the same fix here: tokens managed by the database (*not Redis*).
-
-- Clearner `core/*` files.
+- Cleaner `core/*` files.
 
 - A `socket.io` + `rethinkdb` example
 

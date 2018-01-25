@@ -50,10 +50,9 @@ try {
 
 process.on('SIGINT', function() {
     console.log("Caught interrupt signal");
-    // server.security.saveTokens(function(callback){
+    server.security.saveTokens(function(callback){
       process.exit();
-    // });
-    
+    });
 });
 
 // the book of connections 

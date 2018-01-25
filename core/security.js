@@ -67,33 +67,27 @@ exports.generateToken = function(requestDetails, userDetails, callback) {
   return callback(error, userDetails);
 }
 
-exports.loadTokens = function() {
+exports.loadTokens = () => {
   onConnect(function(err, conn) {
-    r.db(database.name).table('users_token').run(conn, function(err, cursor){
-      cursor.toArray(function(err, results){
-        conn.close();
-        activeTokens = results;
-        console.dir(activeTokens);
-        console.log(results.length + " tokens loaded!");
-      })
+    fs.readFile('./tokens.json', (err, data) => {
+      if(err) return activeTokens = {};
+      activeTokens = JSON.parse(data);
+      console.log(Object.keys(JSON.parse(data)).length + " tokens loaded!");
     })
   })
-}
+};
 
-exports.saveTokens = function(callback) {
-  onConnect(function(err, conn) {
-    r.db(database.name).table('users_token').delete().run(conn, function(err, result) {
-      console.dir(activeTokens);
-      r.db(database.name).table('users_token').insert(activeTokens).run(conn, function(err, result){
-        console.dir(err);
-        console.dir(result);
-        conn.close();
-        console.log("[I] The tokens list has been saved!");
-        return callback(true);
-      })
-    }) 
+exports.saveTokens = (callback) => {
+  onConnect((err, conn) => {
+    fs.writeFile("./tokens.json", JSON.stringify(activeTokens), (err) => {
+      if(err) return console.log(err);
+
+      console.log("The file was saved!");
+      console.log("[I] The tokens list has been saved!");
+      return callback(true);
+    });
   })
-}
+};
 
 
 // Hash the password using SHA256 algorithm /w a salt 🔐
